@@ -1,4 +1,5 @@
 import csv
+from os import read
 #cd documents\python\du_2\ukol2
 
 try:
@@ -23,11 +24,15 @@ with open("data.csv", encoding="utf8") as csvinfile,\
         writer_tyden = csv.writer(csvoutfile_tyden)
         writer_rok = csv.writer(csvoutfile_rok)
         
-        soucet_prutoku = 0 
+        poc_rok = next(reader)
+        csvinfile.seek(0)
+
+        
+        """soucet_prutoku = 0 
         cislo_radku = 0
         zbytek = 0
 
-        """for row in reader:
+        for row in reader:
             if float(row[5]) == 0:
                 print(f"Dne {row[4]}.{row[3]}.{row[2]} došlo k nulovému průtoku!")
 
@@ -40,7 +45,6 @@ with open("data.csv", encoding="utf8") as csvinfile,\
             try:
                 soucet_prutoku = soucet_prutoku + float(row[5])
                 zbytek = zbytek + 1
-                #print(zbytek)
             except ValueError:
                 print("Průtok není v čísleném formátu!")
                 pass
@@ -55,7 +59,7 @@ with open("data.csv", encoding="utf8") as csvinfile,\
             cislo_radku += 1
             print(cislo_radku)"""
 
-        rok = 1980
+        rok = int(poc_rok[2])
         soucet_prutoku_rok = 0
         zbytek_rok = 0
         
@@ -79,7 +83,7 @@ with open("data.csv", encoding="utf8") as csvinfile,\
                 rok += 1
             
 
-            
+    
 
 
         

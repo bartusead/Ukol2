@@ -18,17 +18,17 @@ except PermissionError:
             
     # Chyby - chybí soubor, nemám práva, není .csv...
 with open("data.csv", encoding="utf8") as csvinfile,\
-        open("vystup_7dni.csv", "w", encoding="utf8") as csvoutfile_tyden,\
-            open("vystup_rok.csv", "w", encoding="utf8") as csvoutfile_rok:
+        open("vystup_7dni.csv", "w", encoding="utf8") as csvoutfile_tyden:
+           # open("vystup_rok.csv", "w", encoding="utf8") as csvoutfile_rok:
         reader = csv.reader(csvinfile, delimiter = ",")
         writer_tyden = csv.writer(csvoutfile_tyden)
-        writer_rok = csv.writer(csvoutfile_rok)
+        #writer_rok = csv.writer(csvoutfile_rok)
         
         poc_rok = next(reader)
         csvinfile.seek(0)
 
         
-        """soucet_prutoku = 0 
+        soucet_prutoku = 0 
         cislo_radku = 0
         zbytek = 0
 
@@ -57,30 +57,47 @@ with open("data.csv", encoding="utf8") as csvinfile,\
                 avg_prutok = 0
                 zbytek = 0
             cislo_radku += 1
-            print(cislo_radku)"""
-
-        rok = int(poc_rok[2])
-        soucet_prutoku_rok = 0
-        zbytek_rok = 0
         
-        for row in reader:
-            if int(row[2]) == rok and zbytek_rok == 0:
-                prvni_den_rok = row
-            try:
-                soucet_prutoku_rok = soucet_prutoku_rok + float(row[5])
-                zbytek_rok = zbytek_rok + 1
-                print(zbytek_rok)
-            except ValueError:
-                print("Průtok není v čísleném formátu!")
-                pass
-            if int(row[3]) == 12 and int(row[4]) == 31:
-                avg_prutok_rok = soucet_prutoku_rok / zbytek_rok
-                prvni_den_rok[5] = f"{avg_prutok_rok:.4f}"
-                writer_rok.writerow(prvni_den_rok)
-                zbytek_rok = 0
-                soucet_prutoku_rok = 0
-                avg_prutok_rok = 0
-                rok += 1
+        cislo_radku -= zbytek
+        if cislo_radku % 7 != 6:     
+            print(zbytek)
+            avg_prutok = soucet_prutoku / zbytek
+            prvni_den[5] = f"{avg_prutok:.4f}"
+            writer_tyden.writerow(prvni_den)
+
+
+
+
+with open("data.csv", encoding="utf8") as csvinfile,\
+            open("vystup_rok.csv", "w", encoding="utf8") as csvoutfile_rok:
+            reader = csv.reader(csvinfile, delimiter = ",")
+            #writer_tyden = csv.writer(csvoutfile_tyden)
+            writer_rok = csv.writer(csvoutfile_rok)        
+        
+        
+        
+            rok = int(poc_rok[2])
+            soucet_prutoku_rok = 0
+            zbytek_rok = 0
+            
+            for row in reader:
+                if int(row[2]) == rok and zbytek_rok == 0:
+                    prvni_den_rok = row
+                try:
+                    soucet_prutoku_rok = soucet_prutoku_rok + float(row[5])
+                    zbytek_rok = zbytek_rok + 1
+                    #print(zbytek_rok)
+                except ValueError:
+                    print("Průtok není v čísleném formátu!")
+                    pass
+                if int(row[3]) == 12 and int(row[4]) == 31:
+                    avg_prutok_rok = soucet_prutoku_rok / zbytek_rok
+                    prvni_den_rok[5] = f"{avg_prutok_rok:.4f}"
+                    writer_rok.writerow(prvni_den_rok)
+                    zbytek_rok = 0
+                    soucet_prutoku_rok = 0
+                    avg_prutok_rok = 0
+                    rok += 1
             
 
     

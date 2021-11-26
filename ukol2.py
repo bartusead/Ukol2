@@ -1,56 +1,54 @@
 import csv
-from os import read
-#cd documents\python\du_2\ukol2
-import numpy as np
 
+# Kontroluje správnost/přístupnost načteného souboru
 try:
     with open("data.csv", encoding="utf8") as csvinfile,\
             open("vystup_7dni.csv", "w", encoding="utf8") as csvoutfile_tyden,\
                 open("vystup_rok.csv", "w", encoding="utf8") as csvoutfile_rok:
         reader = csv.reader(csvinfile, delimiter = ",")
         writer_tyden = csv.writer(csvoutfile_tyden)
-        
 except FileNotFoundError:
     print("Vstupní soubor nenalezen, zkontroluj správnost názvu či umístění!")
     exit()
 except PermissionError:
     print("Pro přístup k souboru nemáš práva!")
     exit()   
-            
-    # Chyby - chybí soubor, nemám práva, není .csv...
+
+# Sedmidenní průtoky
+# Načte a definuje vstupní soubor a definuje výstupní soubor 
 with open("data.csv", encoding="utf8") as csvinfile,\
         open("vystup_7dni.csv", "w", encoding="utf8") as csvoutfile_tyden:
-           # open("vystup_rok.csv", "w", encoding="utf8") as csvoutfile_rok:
         reader = csv.reader(csvinfile, delimiter = ",")
         writer_tyden = csv.writer(csvoutfile_tyden)
-        #writer_rok = csv.writer(csvoutfile_rok)
-        
-
+        # Nastaví první řádek do proměnné poc_rok (pak se z něj zjišťuje první rok v souboru) a přeskočí opět na začátek souboru
         poc_rok = next(reader)
         csvinfile.seek(0)
-
         
+        # Definice proměnných
         soucet_prutoku = 0 
         cislo_radku = 0
         zbytek = 0
 
         for row in reader:
-            if float(row[5]) == 0:
-                print(f"Dne {row[4]}.{row[3]}.{row[2]} došlo k nulovému průtoku!")
-
-            if float(row[5]) < 0:
-                print(f"Dne {row[4]}.{row[3]}.{row[2]} došlo k zápornému průtoku!")
-            
+            # Informuje uživatele o nulovém či záporném průtoku a přeskakuje neplatný formát průtoku
+            try:
+                if float(row[5]) == 0:
+                    print(f"Dne {row[4]}.{row[3]}.{row[2]} došlo k nulovému průtoku!")
+                if float(row[5]) < 0:
+                    print(f"Dne {row[4]}.{row[3]}.{row[2]} došlo k zápornému průtoku!")
+            except ValueError:
+                print(f"Průtok ze dne {row[4]}.{row[3]}.{row[2]} není v čísleném formátu!")
+                pass        
+            # Pokud se jedná o první ze sedmi řádků, uloží ho do proměnné prvni_den
             if cislo_radku % 7 == 0:
                 prvni_den = row
-            
+            # Procedura sčítání průtoků, případné přeskočení neplatné hodnoty
             try:
                 soucet_prutoku = soucet_prutoku + float(row[5])
                 zbytek = zbytek + 1
             except ValueError:
-                print("Průtok není v čísleném formátu!")
                 pass
-
+            # Když program narazí na poslední ze sedmi dnů, spočítá průměr a zapíše do souboru
             if cislo_radku % 7 == 6:
                 avg_prutok = soucet_prutoku / 7
                 prvni_den[5] = f"{avg_prutok:.4f}"
@@ -60,39 +58,37 @@ with open("data.csv", encoding="utf8") as csvinfile,\
                 zbytek = 0
             cislo_radku += 1
         
+        # Dopočítání průměru ze zbylých dnů
         cislo_radku -= zbytek
         if cislo_radku % 7 != 6:     
-            #print(zbytek)
             avg_prutok = soucet_prutoku / zbytek
             prvni_den[5] = f"{avg_prutok:.4f}"
             writer_tyden.writerow(prvni_den)
 
 
-
-
+# Roční průtoky
+# Načte a definuje vstupní soubor a definuje výstupní soubor 
 with open("data.csv", encoding="utf8") as csvinfile,\
             open("vystup_rok.csv", "w", encoding="utf8") as csvoutfile_rok:
             reader = csv.reader(csvinfile, delimiter = ",")
-            #writer_tyden = csv.writer(csvoutfile_tyden)
             writer_rok = csv.writer(csvoutfile_rok)        
-        
-        
-        
+            
+            # Definice proměnných
             rok = int(poc_rok[2])
             soucet_prutoku_rok = 0
             zbytek_rok = 0
-            
             for row in reader:
+                # Pokud se jedná o první záznam roku, uloží ho do proměnné prvni_den_rok
                 if int(row[2]) == rok and zbytek_rok == 0:
                     prvni_den_rok = row
+                # Procedura sčítání průtoků, případné přeskočení neplatné hodnoty
                 try:
                     soucet_prutoku_rok = soucet_prutoku_rok + float(row[5])
                     zbytek_rok = zbytek_rok + 1
                 except ValueError:
-                    print("Průtok není v čísleném formátu!")
                     pass
                 
-
+                # Když program narazí na poslední den v roce, spočítá průměr za celý rok
                 if int(row[3]) == 12 and int(row[4]) == 31:
                     avg_prutok_rok = soucet_prutoku_rok / zbytek_rok
                     prvni_den_rok[5] = f"{avg_prutok_rok:.4f}"

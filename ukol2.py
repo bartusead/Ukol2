@@ -1,6 +1,7 @@
 import csv
 from os import read
 #cd documents\python\du_2\ukol2
+import numpy as np
 
 try:
     with open("data.csv", encoding="utf8") as csvinfile,\
@@ -24,6 +25,7 @@ with open("data.csv", encoding="utf8") as csvinfile,\
         writer_tyden = csv.writer(csvoutfile_tyden)
         #writer_rok = csv.writer(csvoutfile_rok)
         
+
         poc_rok = next(reader)
         csvinfile.seek(0)
 
@@ -60,7 +62,7 @@ with open("data.csv", encoding="utf8") as csvinfile,\
         
         cislo_radku -= zbytek
         if cislo_radku % 7 != 6:     
-            print(zbytek)
+            #print(zbytek)
             avg_prutok = soucet_prutoku / zbytek
             prvni_den[5] = f"{avg_prutok:.4f}"
             writer_tyden.writerow(prvni_den)
@@ -86,10 +88,11 @@ with open("data.csv", encoding="utf8") as csvinfile,\
                 try:
                     soucet_prutoku_rok = soucet_prutoku_rok + float(row[5])
                     zbytek_rok = zbytek_rok + 1
-                    #print(zbytek_rok)
                 except ValueError:
                     print("Průtok není v čísleném formátu!")
                     pass
+                
+
                 if int(row[3]) == 12 and int(row[4]) == 31:
                     avg_prutok_rok = soucet_prutoku_rok / zbytek_rok
                     prvni_den_rok[5] = f"{avg_prutok_rok:.4f}"
@@ -98,7 +101,10 @@ with open("data.csv", encoding="utf8") as csvinfile,\
                     soucet_prutoku_rok = 0
                     avg_prutok_rok = 0
                     rok += 1
-            
+
+
+       
+
 
     
 

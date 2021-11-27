@@ -74,51 +74,40 @@ with open("vstup.csv", encoding="utf8") as csvinfile,\
             writer_rok = csv.writer(csvoutfile_rok)        
             
             # Definice proměnných
-            rok = int(poc_rok[2])
+            cislo_radku = 0
             soucet_prutoku_rok = 0
             zbytek_rok = 0
             for row in reader:
                 # Pokud se jedná o první záznam roku, uloží ho do proměnné prvni_den_rok
-                if int(row[2]) == rok and zbytek_rok == 0:
+                soucasny_rok = int(row[2])
+                if cislo_radku == 0:
+                    prutok_rok = soucasny_rok
                     prvni_den_rok = row
                 # Procedura sčítání průtoků, případné přeskočení neplatné hodnoty
                 try:
-                    soucet_prutoku_rok = soucet_prutoku_rok + float(row[5])
+                    soucasny_prutok = float(row[5])
+                    soucet_prutoku_rok = soucet_prutoku_rok + float(row[5])                    
                     zbytek_rok = zbytek_rok + 1
                 except ValueError:
                     pass
                 
-                # Když program narazí na poslední den v roce, spočítá průměr za celý rok a zapíše ho do souboru
-                if int(row[3]) == 12 and int(row[4]) == 31:
-                    avg_prutok_rok = soucet_prutoku_rok / zbytek_rok
+                # Když program narazí na nový rok, spočítá průměr za předchozí rok a zapíše ho do souboru
+                if soucasny_rok != prutok_rok:
+                    avg_prutok_rok = (soucet_prutoku_rok - soucasny_prutok) / (zbytek_rok -1)
                     prvni_den_rok[5] = f"{avg_prutok_rok:.4f}"
                     writer_rok.writerow(prvni_den_rok)
-                    zbytek_rok = 0
-                    soucet_prutoku_rok = 0
-                    avg_prutok_rok = 0
-                    rok += 1
+                    soucet_prutoku_rok = soucasny_prutok
+                    zbytek_rok = 1
+                    prutok_rok = soucasny_rok
+                    prvni_den_rok = row
+                cislo_radku = cislo_radku + 1
+            # Jelikož po posledním roce program na nový rok nenarazí, musí se spočítat a zapsat zvlášť
+            if soucasny_rok == prutok_rok:
+                avg_prutok_rok = soucet_prutoku_rok / zbytek_rok
+                prvni_den_rok[5] = f" {avg_prutok_rok:.4f}"
+                writer_rok.writerow(prvni_den_rok)
+                    
 
-with open("vstup.csv", encoding="utf-8") as csvinfile:
-    reader = csv.reader(csvinfile, delimiter = ",")
-
-    for row in reader:
-        if reader.line_num == 1:
-            radek_max_prutok = row
-            radek_min_prutok = row
-            max_prutok = float(radek_max_prutok[5])
-            min_prutok = float(radek_min_prutok[5])
-        
-        aktualni_prutok = float(row[5])
-        
-        if aktualni_prutok > max_prutok:
-            radek_max_prutok = row
-            max_prutok = aktualni_prutok
-        elif aktualni_prutok < min_prutok:
-            radek_min_prutok = row
-            min_prutok = aktualni_prutok
-
-    print(f"Maximální průtok byl {radek_max_prutok[4]}.{radek_max_prutok[3]}.{radek_max_prutok[2]} s hodnotou {radek_max_prutok[5]}.")
-    print(f"Minimální průtok byl {radek_min_prutok[4]}.{radek_min_prutok[3]}.{radek_min_prutok[2]} s hodnotou {radek_min_prutok[5]}.")
 
        
 

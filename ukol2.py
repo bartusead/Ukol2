@@ -2,7 +2,7 @@ import csv
 
 # Kontroluje správnost/přístupnost načteného souboru
 try:
-    with open("data.csv", encoding="utf8") as csvinfile,\
+    with open("vstup.csv", encoding="utf8") as csvinfile,\
             open("vystup_7dni.csv", "w", encoding="utf8") as csvoutfile_tyden,\
                 open("vystup_rok.csv", "w", encoding="utf8") as csvoutfile_rok:
         reader = csv.reader(csvinfile, delimiter = ",")
@@ -16,7 +16,7 @@ except PermissionError:
 
 # Sedmidenní průtoky
 # Načte a definuje vstupní soubor a definuje výstupní soubor 
-with open("data.csv", encoding="utf8") as csvinfile,\
+with open("vstup.csv", encoding="utf8") as csvinfile,\
         open("vystup_7dni.csv", "w", encoding="utf8") as csvoutfile_tyden:
         reader = csv.reader(csvinfile, delimiter = ",")
         writer_tyden = csv.writer(csvoutfile_tyden)
@@ -68,7 +68,7 @@ with open("data.csv", encoding="utf8") as csvinfile,\
 
 # Roční průtoky
 # Načte a definuje vstupní soubor a definuje výstupní soubor 
-with open("data.csv", encoding="utf8") as csvinfile,\
+with open("vstup.csv", encoding="utf8") as csvinfile,\
             open("vystup_rok.csv", "w", encoding="utf8") as csvoutfile_rok:
             reader = csv.reader(csvinfile, delimiter = ",")
             writer_rok = csv.writer(csvoutfile_rok)        
@@ -88,7 +88,7 @@ with open("data.csv", encoding="utf8") as csvinfile,\
                 except ValueError:
                     pass
                 
-                # Když program narazí na poslední den v roce, spočítá průměr za celý rok
+                # Když program narazí na poslední den v roce, spočítá průměr za celý rok a zapíše ho do souboru
                 if int(row[3]) == 12 and int(row[4]) == 31:
                     avg_prutok_rok = soucet_prutoku_rok / zbytek_rok
                     prvni_den_rok[5] = f"{avg_prutok_rok:.4f}"
@@ -98,6 +98,27 @@ with open("data.csv", encoding="utf8") as csvinfile,\
                     avg_prutok_rok = 0
                     rok += 1
 
+with open("vstup.csv", encoding="utf-8") as csvinfile:
+    reader = csv.reader(csvinfile, delimiter = ",")
+
+    for row in reader:
+        if reader.line_num == 1:
+            radek_max_prutok = row
+            radek_min_prutok = row
+            max_prutok = float(radek_max_prutok[5])
+            min_prutok = float(radek_min_prutok[5])
+        
+        aktualni_prutok = float(row[5])
+        
+        if aktualni_prutok > max_prutok:
+            radek_max_prutok = row
+            max_prutok = aktualni_prutok
+        elif aktualni_prutok < min_prutok:
+            radek_min_prutok = row
+            min_prutok = aktualni_prutok
+
+    print(f"Maximální průtok byl {radek_max_prutok[4]}.{radek_max_prutok[3]}.{radek_max_prutok[2]} s hodnotou {radek_max_prutok[5]}.")
+    print(f"Minimální průtok byl {radek_min_prutok[4]}.{radek_min_prutok[3]}.{radek_min_prutok[2]} s hodnotou {radek_min_prutok[5]}.")
 
        
 

@@ -52,9 +52,13 @@ Program má za úkol načíst vstupní data o denních průtocích ze souboru vs
     
     c) Měsíc, který je na prvním řádku vstupního souboru, určí jako současný měsíc a přiřadí ho i do proměnné _mesic_. Jinak pořád jen přeskakuje dny a zvyšuje vždy zbytek o 1.
     
-    d) Pokud ale program narazí na řádek, u kterého se měsíc už nerovná proměnné _mesic_, zkusí, jestli byl předešlý měsíc dělitelný počtem dnů (zbytkem), který měl mít. Program     počítá i s přestupnými roky - v takovém případě musí být zbytek v únoru dělitelný 30 místo 29 (zbytek je vždy o 1 vyšší, jelikož došlo k načtení prvního dne z dalšího           měsíce).
+    d) Pokud ale program narazí na řádek, u kterého se měsíc už nerovná proměnné _mesic_, zkusí, jestli byl předešlý měsíc dělitelný beze zbytku počtem dnů (zbytkem), který měl     mít. Program počítá i s přestupnými roky - v takovém případě musí být zbytek v únoru dělitelný beze zbytku 30 místo 29 (zbytek je vždy o 1 vyšší, jelikož došlo k načtení         prvního dne z dalšího měsíce). V případě, že tato dělitelnost není naplněna, program vypíše v jakém měsíci jakého roku chybí kolik dnů.  
     
     c) Pak už jen aktualizuje současný měsíc, změní zbytek na 1 (jako u roku) a nakonec po projetí každého řádku (dne) přičte k proměnné _cislo_radku_mes_.
+    
+Program načítá pro přehlednost vstupní soubor pro každou operaci zvlášť. Vstupní soubor se musí jmenovat _vstup.csv_.
+
+Děkuji za použití programu.
     
    
     

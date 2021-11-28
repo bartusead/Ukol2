@@ -52,7 +52,6 @@ with open("vstup.csv", encoding="utf8") as csvinfile,\
                 soucet_prutoku = 0 
                 zbytek = 0
             cislo_radku += 1
-        print(cislo_radku)
         # Dopočítání průměru ze zbylých dnů
         if cislo_radku % 7 == 0:
             pass
@@ -75,7 +74,11 @@ with open("vstup.csv", encoding="utf8") as csvinfile,\
             zbytek_rok = 0
             for row in reader:
                 # Pokud se jedná o první záznam roku, uloží ho do proměnné prvni_den_rok
-                soucasny_rok = int(row[2])
+                try:
+                    soucasny_rok = int(row[2])
+                except ValueError:
+                    print(f"Na řádku {cislo_radku} je chybně zadný rok!")
+                    continue
                 if cislo_radku == 0:
                     prutok_rok = soucasny_rok
                     prvni_den_rok = row
@@ -136,13 +139,15 @@ with open("vstup.csv", encoding="utf8") as csvinfile:
             zbytek_mesic = 0
             for row in reader:
                 # Definice prvního měsíce
-                soucasny_mes = int(row[3])
+                try:
+                    soucasny_mes = int(row[3])
+                except ValueError:
+                    print(f"Na řádku {cislo_radku} není zadán platný měsíc (není v číselném formátu)!")    
+                    continue    
                 if cislo_radku_mes == 0:
                     mesic = soucasny_mes
-                try:
-                    zbytek_mesic += 1 
-                except ValueError:
-                    pass
+                zbytek_mesic += 1 
+
                 
                 # Když program zjistí nový měsíc, porovná, kolik dnů měl mít měsíc a kolik jsich skutečně měl
                 if soucasny_mes != mesic:

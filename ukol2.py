@@ -6,7 +6,6 @@ try:
             open("vystup_7dni.csv", "w", encoding="utf8") as csvoutfile_tyden,\
                 open("vystup_rok.csv", "w", encoding="utf8") as csvoutfile_rok:
         reader = csv.reader(csvinfile, delimiter = ",")
-        writer_tyden = csv.writer(csvoutfile_tyden)
 except FileNotFoundError:
     print("Vstupní soubor nenalezen, zkontroluj správnost názvu či umístění!")
     exit()
@@ -53,10 +52,11 @@ with open("vstup.csv", encoding="utf8") as csvinfile,\
                 soucet_prutoku = 0 
                 zbytek = 0
             cislo_radku += 1
-        
+        print(cislo_radku)
         # Dopočítání průměru ze zbylých dnů
-        cislo_radku -= zbytek
-        if cislo_radku % 7 != 6:     
+        if cislo_radku % 7 == 0:
+            pass
+        else: 
             avg_prutok = soucet_prutoku / zbytek
             prvni_den[5] = f"{avg_prutok:.4f}"
             writer_tyden.writerow(prvni_den)
@@ -163,3 +163,5 @@ with open("vstup.csv", encoding="utf8") as csvinfile:
                     mesic = soucasny_mes
                     zbytek_mesic = 1
                 cislo_radku_mes +=1
+
+                

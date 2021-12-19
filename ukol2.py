@@ -1,5 +1,4 @@
 import csv
-
 # Kontroluje správnost/přístupnost načteného souboru
 try:
     with open("vstup.csv", encoding="utf8") as csvinfile,\
@@ -108,7 +107,6 @@ with open("vstup.csv", encoding="utf8") as csvinfile,\
 
 # Maximální a minimální průtok
 # Načtení souboru
-
 with open("vstup.csv", encoding="utf-8") as csvinfile:
     reader = csv.reader(csvinfile, delimiter = ",")
 
